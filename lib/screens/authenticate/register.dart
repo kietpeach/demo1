@@ -1,26 +1,26 @@
-import 'package:K1/screens/authenticate/register.dart';
 import 'package:K1/screens/home/home.dart';
-import 'package:K1/services/auth.dart';
 import 'package:K1/shared/constants.dart';
 import 'package:K1/shared/loading.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
+import '../../services/auth.dart';
+import '../../services/auth.dart';
+import 'sign_in.dart';
+
+class Resgister extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _ResgisterState createState() => _ResgisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _ResgisterState extends State<Resgister> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
   //text field state
-  String _email = "";
-  String _password = "";
-  String _error = '';
-  bool _showPass = false;
-
+  String email = '';
+  String password = '';
+  String error = '';
   @override
   Widget build(BuildContext context) {
     return loading
@@ -32,17 +32,15 @@ class _SignInState extends State<SignIn> {
                 actions: [
                   FlatButton.icon(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Resgister()));
+                        Navigator.pop(context,
+                            MaterialPageRoute(builder: (context) => SignIn()));
                       },
                       icon: Icon(Icons.person),
-                      label: Text('Đăng kí'))
+                      label: Text('Đăng Nhập'))
                 ],
                 backgroundColor: Colors.brown[400],
                 elevation: 0.0,
-                title: Text('Đăng nhập vào Kpeach'),
+                title: Text('Đăng kí tài khoản Kpeach'),
               ),
               body: Container(
                 padding: EdgeInsets.all(14.0),
@@ -57,58 +55,43 @@ class _SignInState extends State<SignIn> {
                         validator: (val) =>
                             val.isEmpty ? 'Nhập Email của bạn' : null,
                         onChanged: (val) {
-                          setState(() => _email = val);
+                          setState(() => email = val);
                         },
                         decoration: textInputDecoration.copyWith(
                             labelText: 'Email',
                             hintText: 'tendangnhap@email.com'),
                       ),
                       SizedBox(
-                        height: 20.0,
+                        height: 40.0,
                       ),
-                      Stack(
-                          alignment: AlignmentDirectional.centerEnd,
-                          children: [
-                            TextFormField(
-                              validator: (val) => val.length < 6
-                                  ? 'Nhập password của bạn dài hơn 6 kí tự'
-                                  : null,
-                              obscureText: !_showPass,
-                              onChanged: (val) {
-                                setState(() => _password = val);
-                              },
-                              decoration: textInputDecoration.copyWith(
-                                  labelText: 'Password',
-                                  hintText: 'Nhập mật khẩu'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                  onTap: onTapShowPassword,
-                                  child: Text(
-                                    _showPass ? "Ẩn" : "Hiện",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )),
-                            )
-                          ]),
+                      TextFormField(
+                        validator: (val) => val.length < 6
+                            ? 'Nhập password của bạn dài hơn 6 kí tự'
+                            : null,
+                        obscureText: true,
+                        onChanged: (val) {
+                          setState(() => password = val);
+                        },
+                        decoration: textInputDecoration.copyWith(
+                            labelText: 'Password', hintText: 'Nhập mật khẩu'),
+                      ),
                       SizedBox(
-                        height: 20.0,
+                        height: 40.0,
                       ),
                       RaisedButton(
                           color: Colors.pink[400],
                           child: Text(
-                            "Đăng Nhập",
+                            "Đăng Kí",
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
                               setState(() => loading = true);
                               dynamic result =
-                                  await _auth.signin(_email, _password);
+                                  await _auth.register(email, password);
                               if (result == null) {
                                 setState(() {
-                                  _error = 'Đăng nhập thất bại';
+                                  error = 'Email không hợp lệ';
                                   loading = false;
                                 });
                               }
@@ -118,7 +101,7 @@ class _SignInState extends State<SignIn> {
                         height: 12.0,
                       ),
                       Text(
-                        _error,
+                        error,
                         style: TextStyle(color: Colors.red, fontSize: 14),
                       )
                     ],
@@ -127,11 +110,5 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           );
-  }
-
-  void onTapShowPassword() {
-    setState(() {
-      _showPass = !_showPass;
-    });
   }
 }
