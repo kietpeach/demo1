@@ -50,7 +50,8 @@ class AuthService {
       User user = result.user;
 
       //create a new document for the user with the uid
-      await DatabaseService(uid:  user.uid).updateUserData('0', 'new kiet member', 100);
+      await DatabaseService(uid: user.uid)
+          .updateUserData('0%', 'thành viên mới của kietpeach coffee', 100);
       return _fromFirebaseUser(user);
     } catch (err) {
       print(err.toString());
@@ -59,7 +60,7 @@ class AuthService {
   }
 
   //sign out
-  Future dangXuat() async {
+  Future signOut() async {
     try {
       return await _auth.signOut();
     } catch (err) {

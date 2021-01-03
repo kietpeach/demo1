@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//su dung cho cac TextField email pass
+//su dung trang tri cho 1 TextField
 const textInputDecoration = InputDecoration(
   fillColor: Colors.white,
   filled: true,
